@@ -363,4 +363,33 @@ contract Blobstream is IDAOracle, Initializable, UUPSUpgradeable, OwnableUpgrade
 
         return isProofValid;
     }
+
+       function gas_attestation_setup_simulate( bytes32 _l2DAValidatorOutputHash, bytes  memory _operatorDAInput) external view {
+        
+        require(_operatorDAInput.length >= 161, "Operator DA input is too small");
+        require(_operatorDAInput.length % 32 == 1, "Operator DA input must have a remainder of 1 when divided by 32");
+        
+        bytes32 stateDiffHash = _l2DAValidatorOutputHash;
+
+        uint256 proofNonce = uint256(_l2DAValidatorOutputHash);
+        DataRootTuple memory dataRootTuple = DataRootTuple(
+            uint256(_l2DAValidatorOutputHash), // blockHeight
+            _l2DAValidatorOutputHash // using the outputHash as a dataRoot
+        );
+
+        BinaryMerkleProof memory proof;
+        proof.key = uint256(_l2DAValidatorOutputHash);
+        proof.numLeaves = uint256(_l2DAValidatorOutputHash);
+
+        uint256 ptr = 161;
+        uint256 sideNodesProvided = 2;
+        bytes32[] memory sideNodes = new bytes32[](sideNodesProvided);
+        for (uint256 i = 0; i < sideNodesProvided; i++) {
+            sideNodes[i] = _l2DAValidatorOutputHash;
+            ptr += 32;
+        }
+
+        proof.sideNodes = sideNodes;
+    }
+
 }

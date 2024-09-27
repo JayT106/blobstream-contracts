@@ -21,6 +21,11 @@ contract RelayerTest is DSTest {
     uint256 constant testPriv1 = 0x64a1d6f0e760a8d62b4afdde4096f16f51b401eaaecc915740f71770ea76a8ad;
     uint256 constant testPriv2 = 0x6e8bdfa979ab645b41c4d17cb1329b2a44684c82b61b1b060ea9b6e1c927a4f4;
 
+    bytes op_input = new bytes(225);
+    bytes32 _hash;
+
+
+
     Blobstream bridge;
 
     Validator[] private validators;
@@ -167,6 +172,8 @@ contract RelayerTest is DSTest {
         DataRootTuple memory t;
         t.height = height;
         t.dataRoot = newTuple;
+
+        bridge.gas_attestation_setup_simulate(_hash, op_input);
 
         // verify that the tuple was committed to
         bool committedTo = bridge.verifyAttestation(nonce, t, newTupleProof);

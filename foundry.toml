@@ -2,3 +2,9 @@
 solc_version = "0.8.22"
 via_ir = true
 gas_reports = ["*"]
+optimizer = true
+optimizer_runs = 999999
+
+[profile.intense.fuzz]
+max_test_rejects = 999999
+runs = 10000
